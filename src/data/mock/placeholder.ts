@@ -141,7 +141,7 @@ function scene(kind: Scene, r: () => number, w: number, h: number, t: Tone): str
         `<path d="M${f(cx - w * 0.13)} ${f(h * 0.38)} q${f(w * 0.13)} -${f(h * 0.2)} ${f(w * 0.26)} 0 q-${f(w * 0.05)} -${f(h * 0.06)} -${f(w * 0.13)} -${f(h * 0.06)} Z" fill="${t.dark}"/>`,
       );
       parts.push(
-        `<rect x="${f(cx - w * 0.035)} y="${f(h * 0.56)}" width="${f(w * 0.07)}" height="${f(h * 0.07)}" fill="${t.mid}"/>`,
+        `<rect x="${f(cx - w * 0.035)}" y="${f(h * 0.56)}" width="${f(w * 0.07)}" height="${f(h * 0.07)}" fill="${t.mid}"/>`,
       );
       break;
     }

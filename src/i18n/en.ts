@@ -83,6 +83,7 @@ export const en: Record<MessageKey, string> = {
   'filters.dateFrom': 'From',
   'filters.dateTo': 'To',
   'filters.decade': 'Decade',
+  'filters.decadeLabel': '{decade}s',
   'filters.textPlaceholder': 'Enter text',
   'filters.operation': 'Condition',
   'filters.op.Contains': 'contains',

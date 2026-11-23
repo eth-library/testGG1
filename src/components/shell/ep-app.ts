@@ -142,7 +142,7 @@ export class EpApp extends EpElement {
     return html`
       <a class="skip" href="#main" data-router="off" @click=${this.#skip}>${this.t('app.skipToContent')}</a>
       ${config.api.mock ? html`<div class="demo" role="note">${this.t('app.demo')}</div>` : nothing}
-      <ep-header .route=${pageRoute}></ep-header>
+      <ep-header .route=${pageRoute} ?inert=${!!overlayId}></ep-header>
       <main id="main" tabindex="-1" ?inert=${!!overlayId}>${this.#page(pageRoute)}</main>
       <ep-footer ?inert=${!!overlayId}></ep-footer>
       ${overlayId ? html`<ep-asset-viewer mode="overlay" .assetId=${overlayId}></ep-asset-viewer>` : nothing}

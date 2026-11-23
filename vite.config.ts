@@ -3,6 +3,9 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   appType: 'spa',
+  resolve: {
+    dedupe: ['lit', 'lit-html', 'lit-element', '@lit/reactive-element'],
+  },
   build: {
     target: 'es2022',
     sourcemap: true,

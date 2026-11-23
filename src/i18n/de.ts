@@ -82,6 +82,7 @@ export const de = {
   'filters.dateFrom': 'Von',
   'filters.dateTo': 'Bis',
   'filters.decade': 'Jahrzehnt',
+  'filters.decadeLabel': '{decade}er',
   'filters.textPlaceholder': 'Text eingeben',
   'filters.operation': 'Bedingung',
   'filters.op.Contains': 'enthält',
