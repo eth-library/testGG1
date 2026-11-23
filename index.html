@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="de" class="wa-theme-default wa-palette-default wa-light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Bildarchiv</title>
+    <meta
+      name="description"
+      content="Öffentlicher Bildkatalog – historische Fotografien durchsuchen, ansehen und herunterladen."
+    />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script>
+      // Farbschema vor dem ersten Paint setzen (kein Aufblitzen im Dunkelmodus).
+      (function () {
+        var scheme = null;
+        try {
+          scheme = JSON.parse(localStorage.getItem('ep-color-scheme'));
+        } catch (e) {}
+        var dark =
+          scheme === 'dark' || (scheme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+        var root = document.documentElement;
+        root.classList.toggle('wa-dark', dark);
+        root.classList.toggle('wa-light', !dark);
+        root.style.background = dark ? '#0e0e10' : '#faf9f6';
+      })();
+    </script>
+    <script type="module" src="/src/main.ts"></script>
+  </head>
+  <body>
+    <div class="ep-boot" id="ep-boot" aria-live="polite">
+      <div class="ep-boot__mark" role="progressbar" aria-label="Wird geladen"></div>
+    </div>
+    <noscript>
+      <p class="ep-boot">Für den Bildkatalog wird JavaScript benötigt.</p>
+    </noscript>
+  </body>
+</html>

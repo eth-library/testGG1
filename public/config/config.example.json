@@ -1,0 +1,157 @@
+{
+  "$comment": "Beispielkonfiguration (Demo-Modus mit Beispieldaten). Für den Betrieb als config.json kopieren und api.mock=false, api.baseUrl, api.token sowie die Feld-IDs setzen. Doku: docs/CONFIG.md",
+  "api": {
+    "mock": true,
+    "zipMode": "fetch",
+    "baseUrl": "",
+    "token": ""
+  },
+  "catalog": {
+    "title": { "de": "Bildarchiv der ETH-Bibliothek", "en": "Image Archive of ETH Library" },
+    "subtitle": {
+      "de": "Historische Fotografien aus Wissenschaft, Technik, Landschaft und Alltag – frei durchsuchbar, vieles frei nutzbar.",
+      "en": "Historical photographs of science, technology, landscape and everyday life – freely searchable, much of it free to use."
+    },
+    "rootCategory": "root",
+    "pageSize": 60
+  },
+  "locales": { "ui": ["de", "en"], "default": "de", "dataFallback": "de" },
+  "search": {
+    "sortOptions": [
+      { "id": "relevance", "label": { "de": "Relevanz", "en": "Relevance" } },
+      { "id": "ba_date_desc", "label": { "de": "Neueste zuerst", "en": "Newest first" } },
+      { "id": "ba_date_asc", "label": { "de": "Älteste zuerst", "en": "Oldest first" } },
+      { "id": "ba_title_asc", "label": { "de": "Titel A–Z", "en": "Title A–Z" } }
+    ],
+    "defaultSort": "relevance",
+    "historySize": 8,
+    "aiSearch": "auto",
+    "defaultView": "justified"
+  },
+  "filters": [
+    { "type": "category", "label": { "de": "Sammlung", "en": "Collection" }, "open": true },
+    { "type": "date", "source": "ba_date", "decades": [1860, 1990], "open": true },
+    { "type": "facet", "source": "ba_photographer", "open": true },
+    { "type": "facet", "source": "ba_location" },
+    { "type": "facet", "source": "ba_keywords" },
+    { "type": "relation", "source": "rel_person", "valueType": "Person" },
+    { "type": "facet", "source": "ba_material" },
+    { "type": "facet", "source": "ba_license" },
+    { "type": "text", "source": "ba_signature", "operation": "Contains" }
+  ],
+  "addableFilters": true,
+  "fields": {
+    "title": "ba_title",
+    "date": "ba_date",
+    "creator": "ba_photographer",
+    "width": "image_width",
+    "height": "image_height",
+    "license": "ba_license",
+    "coordinates": "ba_coordinates",
+    "signature": "ba_signature"
+  },
+  "results": {
+    "tableColumns": [
+      { "field": "ba_signature" },
+      { "field": "ba_date" },
+      { "field": "ba_photographer" },
+      { "field": "ba_location" },
+      { "field": "ba_license" }
+    ]
+  },
+  "detail": {
+    "foldedGroups": ["grp_tech"],
+    "hiddenFields": ["ba_coordinates", "ba_download"],
+    "drillDownFields": ["ba_photographer", "ba_location", "ba_keywords", "ba_material", "ba_license"],
+    "relations": ["rel_series"],
+    "reportIssue": {
+      "mode": "mailto",
+      "target": "bildarchiv@example.org",
+      "subject": { "de": "Hinweis zu Bild", "en": "Note on image" }
+    }
+  },
+  "download": {
+    "previewFormat": "Screen",
+    "zoomFormat": "Print",
+    "showPreviewFormats": ["Screen"],
+    "restriction": { "field": "ba_download", "value": "dl_order" },
+    "order": {
+      "mode": "mailto",
+      "target": "bildarchiv@example.org",
+      "subject": { "de": "Bestellung", "en": "Order" }
+    }
+  },
+  "basket": {
+    "enabled": true,
+    "max": 100,
+    "termsOfUse": "require",
+    "termsText": {
+      "de": "Die Bilder dürfen gemäss der jeweils angegebenen Lizenz genutzt werden. Bitte nennen Sie bei jeder Verwendung die Quelle («ETH-Bibliothek Zürich, Bildarchiv») und den Bildcode.",
+      "en": "Images may be used according to the licence stated for each image. Please credit the source (“ETH Library Zurich, Image Archive”) and the image code."
+    },
+    "clearAfterDownload": false,
+    "defaultFormat": "Screen"
+  },
+  "export": {
+    "fields": [
+      "ba_signature",
+      "ba_title",
+      "ba_date",
+      "ba_photographer",
+      "ba_location",
+      "ba_keywords",
+      "ba_license"
+    ],
+    "delimiter": ";"
+  },
+  "compare": { "enabled": true },
+  "map": {
+    "enabled": true,
+    "styles": { "light": "offline" },
+    "center": [46.8, 8.23],
+    "zoom": 6.6,
+    "maxMarkers": 1500
+  },
+  "home": {
+    "heroAssets": [],
+    "featuredCategories": [
+      "cat_ansichten",
+      "cat_luftbilder",
+      "cat_portraets",
+      "cat_hochschule",
+      "cat_karten"
+    ],
+    "discoverQueries": ["Gletscher", "See", "Laboratorium"],
+    "stats": [
+      { "value": "1,3 Mio.", "label": { "de": "erschlossene Bilder", "en": "catalogued images" } },
+      { "value": "1860", "label": { "de": "älteste Aufnahmen", "en": "earliest photographs" } },
+      { "value": "40", "label": { "de": "Sammlungen und Bestände", "en": "collections and holdings" } }
+    ]
+  },
+  "analytics": {
+    "matomo": { "enabled": false, "url": "https://library-ethz.opsone-analytics.ch/", "siteId": "" }
+  },
+  "branding": {
+    "name": { "de": "Bildarchiv", "en": "Image Archive" },
+    "owner": { "de": "ETH-Bibliothek", "en": "ETH Library" },
+    "footerText": {
+      "de": "Das Bildarchiv der ETH-Bibliothek bewahrt und vermittelt historische Fotografien. Diese Demo zeigt Beispieldaten.",
+      "en": "The Image Archive of ETH Library preserves and shares historical photographs. This demo shows sample data."
+    },
+    "links": [
+      {
+        "label": { "de": "Über das Bildarchiv", "en": "About the archive" },
+        "href": "https://library.ethz.ch/"
+      },
+      { "label": { "de": "Hilfe zur Suche", "en": "Search help" }, "href": "https://library.ethz.ch/" },
+      { "label": { "de": "Kontakt", "en": "Contact" }, "href": "mailto:bildarchiv@example.org" },
+      { "label": { "de": "Impressum", "en": "Imprint" }, "href": "https://library.ethz.ch/" },
+      { "label": { "de": "Datenschutz", "en": "Privacy" }, "href": "https://library.ethz.ch/" },
+      { "label": { "de": "Barrierefreiheit", "en": "Accessibility" }, "href": "https://library.ethz.ch/" }
+    ]
+  },
+  "theme": {
+    "active": "eth-blau",
+    "radiusScale": 1
+  }
+}

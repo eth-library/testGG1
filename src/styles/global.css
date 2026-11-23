@@ -1,0 +1,148 @@
+@import '@awesome.me/webawesome/dist/styles/webawesome.css';
+@import '@fontsource-variable/inter/index.css';
+@import '@fontsource/instrument-serif/400.css';
+@import '@fontsource/instrument-serif/400-italic.css';
+
+/*
+ * Globale Grundlagen der «Editorial Gallery».
+ * Farben kommen ausschliesslich aus den generierten Theme-Variablen (--ep-*, --wa-*).
+ */
+:root {
+  --ep-gutter: clamp(1rem, 3.2vw, 2.75rem);
+  --ep-max: 1680px;
+  --ep-header-h: 4.25rem;
+  --ep-radius-s: calc(0.375rem * var(--wa-border-radius-scale, 1));
+  --ep-radius-m: calc(0.625rem * var(--wa-border-radius-scale, 1));
+  --ep-radius-l: calc(1rem * var(--wa-border-radius-scale, 1));
+  --ep-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ep-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ep-dur-fast: 160ms;
+  --ep-dur: 280ms;
+  --ep-dur-slow: 520ms;
+  --ep-shadow-s: 0 1px 2px var(--ep-shadow-color), 0 2px 8px var(--ep-shadow-color);
+  --ep-shadow-m: 0 6px 24px -6px var(--ep-shadow-color), 0 2px 6px var(--ep-shadow-color);
+  --ep-shadow-l: 0 24px 64px -16px var(--ep-shadow-color), 0 6px 18px var(--ep-shadow-color);
+  --ep-text-xs: 0.75rem;
+  --ep-text-s: 0.8125rem;
+  --ep-text-m: 0.9375rem;
+  --ep-text-l: 1.0625rem;
+  --ep-display-s: clamp(1.75rem, 1.2rem + 1.6vw, 2.5rem);
+  --ep-display-m: clamp(2.25rem, 1.4rem + 2.8vw, 3.75rem);
+  --ep-display-l: clamp(2.75rem, 1.2rem + 5.6vw, 6.25rem);
+  --wa-font-size-scale: 0.95;
+  --wa-focus-ring: solid 2px var(--ep-accent);
+  --wa-focus-ring-offset: 2px;
+}
+
+html {
+  background: var(--ep-bg);
+  color: var(--ep-text);
+  font-family: var(--ep-font-ui);
+  font-feature-settings: 'cv11', 'ss01', 'ss03';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scrollbar-gutter: stable;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--ep-bg);
+  color: var(--ep-text);
+  font-size: var(--ep-text-m);
+  line-height: 1.55;
+}
+
+body.ep-scroll-lock {
+  overflow: hidden;
+}
+
+::selection {
+  background: var(--ep-accent-soft);
+  color: var(--ep-text);
+}
+
+:focus-visible {
+  outline: 2px solid var(--ep-accent);
+  outline-offset: 2px;
+}
+
+a {
+  color: var(--ep-accent-text);
+}
+
+/* Lade- und Fehlerbildschirm vor dem Start der App */
+.ep-boot {
+  display: grid;
+  place-items: center;
+  min-height: 100dvh;
+  padding: var(--ep-gutter);
+  text-align: center;
+  font-family: var(--ep-font-ui);
+}
+
+.ep-boot h1 {
+  font-family: var(--ep-font-display);
+  font-weight: 400;
+  font-size: var(--ep-display-s);
+  margin: 0 0 0.5rem;
+}
+
+.ep-boot pre {
+  text-align: left;
+  font-size: var(--ep-text-s);
+  white-space: pre-wrap;
+  color: var(--ep-muted);
+}
+
+.ep-boot__mark {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 2px solid var(--ep-border);
+  border-top-color: var(--ep-accent);
+  animation: ep-spin 900ms linear infinite;
+}
+
+@keyframes ep-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Weicher Wechsel zwischen hell und dunkel (View Transitions) */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 420ms;
+  animation-timing-function: var(--ep-ease-in-out);
+}
+
+/* Übergang Miniatur → Detailbild */
+::view-transition-group(ep-hero-image) {
+  animation-duration: 420ms;
+  animation-timing-function: var(--ep-ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+@media print {
+  html,
+  body {
+    background: white;
+    color: black;
+  }
+}
