@@ -46,20 +46,29 @@ export class EpDownloadMenu extends EpElement {
     this.busy = '';
   }
 
+  /** Schlüssel aus Asset und Sprache – Formatnamen sind lokalisiert. */
+  get #key(): string {
+    return `${this.asset?.id ?? ''}|${this.services.i18n.locale}`;
+  }
+
   protected override willUpdate(): void {
-    if (this.asset && this.asset.id !== this.#loadedFor) {
-      this.#loadedFor = this.asset.id;
+    if (this.asset && this.#key !== this.#loadedFor) {
+      this.#loadedFor = this.#key;
       this.formats = null;
     }
   }
 
   async #load() {
     if (this.formats) return;
+    const key = this.#key;
+    let formats: DownloadFormat[];
     try {
-      this.formats = await this.services.catalog.getDownloadFormats(this.asset.id);
+      formats = await this.services.catalog.getDownloadFormats(this.asset.id);
     } catch {
-      this.formats = [];
+      formats = [];
     }
+    // Antwort verwerfen, falls inzwischen ein anderes Bild oder eine andere Sprache aktiv ist.
+    if (key === this.#key) this.formats = formats;
   }
 
   async #download(format: DownloadFormat) {

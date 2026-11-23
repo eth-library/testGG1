@@ -93,7 +93,8 @@ export class EpApp extends EpElement {
 
   protected override updated(_changed: PropertyValues): void {
     const loc = this.services.router.location;
-    const path = loc.path + loc.query.toString();
+    const qs = loc.query.toString();
+    const path = loc.path + (qs ? `?${qs}` : '');
     if (path !== this.#lastPath) {
       const previous = this.#lastPath;
       this.#lastPath = path;
@@ -108,7 +109,7 @@ export class EpApp extends EpElement {
     }
   }
 
-  #page(route: Route) {
+  #page(route: Route, query: URLSearchParams) {
     switch (route.name) {
       case 'home':
         return html`<ep-home-page></ep-home-page>`;
@@ -121,7 +122,7 @@ export class EpApp extends EpElement {
       case 'map':
         return html`<ep-map-page></ep-map-page>`;
       case 'selection':
-        return html`<ep-selection-page></ep-selection-page>`;
+        return html`<ep-selection-page .ids=${query.get('ids') ?? ''}></ep-selection-page>`;
       case 'asset':
         return html`<ep-asset-viewer mode="page" .assetId=${route.id}></ep-asset-viewer>`;
       default:
@@ -138,17 +139,20 @@ export class EpApp extends EpElement {
     const loc = router.location;
     // Detail als Overlay: darunter bleibt die Ausgangsseite stehen.
     let pageRoute: Route = loc.route;
+    let pageQuery = loc.query;
     let overlayId: string | undefined;
     if (loc.route.name === 'asset' && loc.state.overlayOf) {
       const url = new URL(loc.state.overlayOf, location.origin);
-      pageRoute = matchRoute(url.pathname.slice(router.base.length) || '/');
+      // overlayOf ist bereits relativ zur Basis (siehe Router.overlayBase).
+      pageRoute = matchRoute(url.pathname);
+      pageQuery = url.searchParams;
       overlayId = loc.route.id;
     }
     return html`
       <a class="skip" href="#main" data-router="off" @click=${this.#skip}>${this.t('app.skipToContent')}</a>
       ${config.api.mock ? html`<div class="demo" role="note">${this.t('app.demo')}</div>` : nothing}
       <ep-header .route=${pageRoute} ?inert=${!!overlayId}></ep-header>
-      <main id="main" tabindex="-1" ?inert=${!!overlayId}>${this.#page(pageRoute)}</main>
+      <main id="main" tabindex="-1" ?inert=${!!overlayId}>${this.#page(pageRoute, pageQuery)}</main>
       <ep-footer ?inert=${!!overlayId}></ep-footer>
       ${overlayId ? html`<ep-asset-viewer mode="overlay" .assetId=${overlayId}></ep-asset-viewer>` : nothing}
       <ep-basket-drawer></ep-basket-drawer>

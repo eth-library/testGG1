@@ -51,6 +51,17 @@ export class EpElement extends LitElement {
       outline: 2px solid var(--ep-accent);
       outline-offset: 2px;
     }
+    /* Dokumentweite Regeln greifen nicht in Shadow DOMs – daher hier wiederholt. */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 1ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
   `;
 
   constructor() {

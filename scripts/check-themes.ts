@@ -8,9 +8,12 @@ import { resolveConfig } from '../src/config/load-config.ts';
 import { contrast } from '../src/theme/color.ts';
 import { deriveTokens } from '../src/theme/theme-css.ts';
 
-const candidates = [process.argv[2], 'public/config/config.json', 'public/config/config.example.json'].filter(
-  (p): p is string => !!p,
-);
+const explicit = process.argv[2];
+if (explicit && !existsSync(resolve(explicit))) {
+  console.error(`Konfigurationsdatei nicht gefunden: ${explicit}`);
+  process.exit(1);
+}
+const candidates = explicit ? [explicit] : ['public/config/config.json', 'public/config/config.example.json'];
 const file = candidates.map((p) => resolve(p)).find((p) => existsSync(p));
 if (!file) {
   console.error('Keine Konfigurationsdatei gefunden.');

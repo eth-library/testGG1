@@ -103,15 +103,25 @@ export class EpActiveFilters extends EpElement {
     new StoreController(this, this.services.search);
   }
 
+  #locale = '';
+
   protected override willUpdate(): void {
-    const { search, router, catalog } = this.services;
+    const { search, router, catalog, i18n } = this.services;
+    // Namen sind lokalisiert: bei Sprachwechsel beide Zwischenspeicher verwerfen.
+    const locale = i18n.locale;
+    if (locale !== this.#locale) {
+      this.#locale = locale;
+      this.#categoryFor = '';
+      this.relationLabels = new Map();
+    }
     const cat = search.state.query.category;
-    if (cat && cat !== this.#categoryFor && router.location.route.name !== 'collection') {
-      this.#categoryFor = cat;
+    const catKey = `${locale}|${cat ?? ''}`;
+    if (cat && catKey !== this.#categoryFor && router.location.route.name !== 'collection') {
+      this.#categoryFor = catKey;
       categories
         .node(cat)
-        .then((node) => (this.categoryName = node.name))
-        .catch(() => (this.categoryName = cat));
+        .then((node) => catKey === this.#categoryFor && (this.categoryName = node.name))
+        .catch(() => catKey === this.#categoryFor && (this.categoryName = cat));
     }
     for (const source of Object.keys(search.state.query.facets)) {
       const rel = catalog.relationTypes().get(source);
@@ -119,6 +129,7 @@ export class EpActiveFilters extends EpElement {
         this.relationLabels.set(`${source}:*`, '');
         const filter = search.filters.find((f) => f.source === source);
         catalog.relationOptions(source, filter?.valueType).then((options) => {
+          if (locale !== this.#locale) return; // veraltete Antwort
           const next = new Map(this.relationLabels);
           for (const o of options) next.set(`${source}:${o.id}`, o.label);
           this.relationLabels = next;

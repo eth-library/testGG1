@@ -37,7 +37,13 @@ const ROUTES: Array<[RegExp, (m: RegExpMatchArray) => Route]> = [
 export function matchRoute(path: string): Route {
   for (const [pattern, build] of ROUTES) {
     const match = path.match(pattern);
-    if (match) return build(match);
+    if (!match) continue;
+    try {
+      return build(match);
+    } catch {
+      // z. B. /bild/%ZZ – fehlerhafte Prozent-Kodierung
+      return { name: 'notFound' };
+    }
   }
   return { name: 'notFound' };
 }

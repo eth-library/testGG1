@@ -75,6 +75,8 @@ export class EpZoom extends EpElement {
 
   override async firstUpdated() {
     const { default: OpenSeadragon } = await import('openseadragon');
+    // Zoom inzwischen geschlossen bzw. Bild gewechselt → keinen verwaisten Viewer erzeugen.
+    if (!this.isConnected) return;
     const element = this.renderRoot.querySelector<HTMLElement>('.osd')!;
     const viewer = OpenSeadragon({
       element,

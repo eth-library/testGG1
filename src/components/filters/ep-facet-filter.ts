@@ -130,14 +130,17 @@ export class EpFacetFilter extends EpElement {
     new StoreController(this, this.services.search);
   }
 
-  override connectedCallback(): void {
-    super.connectedCallback();
-    if (this.filter?.type === 'relation' && this.filter.source) {
-      this.services.catalog
-        .relationOptions(this.filter.source, this.filter.valueType)
-        .then((options) => (this.relationOptions = options))
-        .catch(() => (this.relationOptions = []));
-    }
+  #optionsFor = '';
+
+  protected override willUpdate(): void {
+    if (this.filter?.type !== 'relation' || !this.filter.source) return;
+    const key = `${this.services.i18n.locale}|${this.filter.source}|${this.filter.valueType ?? ''}`;
+    if (key === this.#optionsFor) return;
+    this.#optionsFor = key;
+    this.services.catalog
+      .relationOptions(this.filter.source, this.filter.valueType)
+      .then((options) => key === this.#optionsFor && (this.relationOptions = options))
+      .catch(() => key === this.#optionsFor && (this.relationOptions = []));
   }
 
   get #source(): string {

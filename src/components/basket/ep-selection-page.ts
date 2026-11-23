@@ -5,7 +5,9 @@ import '../results/ep-results.ts';
 
 /** Geteilte Auswahl (/auswahl?ids=…): Bilder ansehen und in die eigene Auswahl übernehmen. */
 export class EpSelectionPage extends EpElement {
-  static override properties = { items: { state: true }, loading: { state: true } };
+  static override properties = { ids: {}, items: { state: true }, loading: { state: true } };
+  declare ids: string;
+  #loadedFor = '';
   declare items: Asset[];
   declare loading: boolean;
 
@@ -52,6 +54,7 @@ export class EpSelectionPage extends EpElement {
 
   constructor() {
     super();
+    this.ids = '';
     this.items = [];
     this.loading = true;
   }
@@ -59,18 +62,27 @@ export class EpSelectionPage extends EpElement {
   override connectedCallback(): void {
     super.connectedCallback();
     document.title = `${this.t('basket.shared.title')} – ${this.pick(this.services.config.branding.name)}`;
-    void this.#load();
   }
 
-  async #load() {
-    const ids = (this.services.router.location.query.get('ids') ?? '')
-      .split(',')
-      .filter(Boolean)
-      .slice(0, 200);
+  protected override willUpdate(): void {
+    // Neu laden, wenn sich die IDs (Navigation innerhalb /auswahl) oder die Sprache ändern.
+    const key = `${this.services.i18n.locale}|${this.ids}`;
+    if (key !== this.#loadedFor) {
+      this.#loadedFor = key;
+      void this.#load(key);
+    }
+  }
+
+  async #load(key: string) {
+    const ids = this.ids.split(',').filter(Boolean).slice(0, 200);
+    this.loading = true;
     try {
-      this.items = await this.services.catalog.getAssets(ids);
+      const items = await this.services.catalog.getAssets(ids);
+      if (key === this.#loadedFor) this.items = items;
+    } catch {
+      if (key === this.#loadedFor) this.items = [];
     } finally {
-      this.loading = false;
+      if (key === this.#loadedFor) this.loading = false;
     }
   }
 

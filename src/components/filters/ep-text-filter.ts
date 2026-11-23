@@ -30,13 +30,17 @@ export class EpTextFilter extends EpElement {
     return this.filter.source ?? '';
   }
 
+  /** Gewählte Bedingung, solange noch kein Text eingegeben ist. */
+  #draftOp?: string;
+
   #apply(patch: { op?: string; value?: string }) {
     const { search } = this.services;
     const current = search.state.query.texts[this.#source] ?? {
-      op: this.filter.operation ?? 'Contains',
+      op: this.#draftOp ?? this.filter.operation ?? 'Contains',
       value: '',
     };
     const next = { ...current, ...patch };
+    this.#draftOp = next.op;
     const texts = { ...search.state.query.texts };
     if (next.value.trim()) texts[this.#source] = next;
     else delete texts[this.#source];
@@ -45,7 +49,7 @@ export class EpTextFilter extends EpElement {
 
   override render() {
     const current = this.services.search.state.query.texts[this.#source];
-    const op = current?.op ?? this.filter.operation ?? 'Contains';
+    const op = current?.op ?? this.#draftOp ?? this.filter.operation ?? 'Contains';
     return html`
       <wa-select
         class="sr-label"

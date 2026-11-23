@@ -48,7 +48,8 @@ export class I18n extends EventTarget {
 
   /** BCP-47-Tag für Intl-Formatierungen (Schweizer Varianten). */
   get intlLocale(): string {
-    return { de: 'de-CH', en: 'en-GB', fr: 'fr-CH', it: 'it-CH' }[this.#locale] ?? this.#locale;
+    const variants: Record<string, string> = { de: 'de-CH', en: 'en-GB', fr: 'fr-CH', it: 'it-CH' };
+    return variants[this.#locale] ?? this.#locale;
   }
 
   setLocale(locale: string): void {

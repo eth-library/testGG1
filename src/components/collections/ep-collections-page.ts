@@ -133,23 +133,31 @@ export class EpCollectionsPage extends EpElement {
     this.loading = true;
   }
 
-  override connectedCallback(): void {
-    super.connectedCallback();
-    document.title = `${this.t('nav.collections')} – ${this.pick(this.services.config.branding.name)}`;
-    void this.#load();
+  #loadedFor = '';
+
+  protected override willUpdate(): void {
+    const locale = this.services.i18n.locale;
+    if (locale !== this.#loadedFor) {
+      this.#loadedFor = locale;
+      document.title = `${this.t('nav.collections')} – ${this.pick(this.services.config.branding.name)}`;
+      void this.#load(locale);
+    }
   }
 
-  async #load() {
+  async #load(locale: string) {
     try {
       const top = await categories.children(categories.root());
-      this.entries = await Promise.all(
+      const entries = await Promise.all(
         top.map(async (node) => ({
           node: await categories.node(node.id).catch(() => ({ ...node, fields: [] })),
           children: node.hasChildren ? await categories.children(node.id).catch(() => []) : [],
         })),
       );
+      if (locale === this.#loadedFor) this.entries = entries;
+    } catch {
+      if (locale === this.#loadedFor) this.entries = [];
     } finally {
-      this.loading = false;
+      if (locale === this.#loadedFor) this.loading = false;
     }
   }
 

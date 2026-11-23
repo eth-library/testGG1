@@ -8,11 +8,13 @@ export class EpCompareDialog extends EpElement {
     ids: { attribute: false },
     assets: { state: true },
     open: { state: true },
+    failed: { state: true },
   };
 
   declare ids: string[];
   declare assets: AssetDetail[];
   declare open: boolean;
+  declare failed: boolean;
 
   static override styles = [
     EpElement.baseStyles,
@@ -89,11 +91,21 @@ export class EpCompareDialog extends EpElement {
     this.ids = [];
     this.assets = [];
     this.open = true;
+    this.failed = false;
   }
 
-  override async connectedCallback() {
+  override connectedCallback() {
     super.connectedCallback();
-    this.assets = await Promise.all(this.ids.slice(0, 2).map((id) => this.services.catalog.getAsset(id)));
+    void this.#load();
+  }
+
+  async #load() {
+    this.failed = false;
+    try {
+      this.assets = await Promise.all(this.ids.slice(0, 2).map((id) => this.services.catalog.getAsset(id)));
+    } catch {
+      this.failed = true;
+    }
   }
 
   #fields(asset: AssetDetail) {
@@ -138,7 +150,14 @@ export class EpCompareDialog extends EpElement {
                     </div>`,
                 )}
               </div>`
-          : html`<div class="loading"><wa-spinner style="font-size:2rem"></wa-spinner></div>`
+          : this.failed
+            ? html`<div class="loading">
+                <p>${this.t('detail.loadError')}</p>
+                <wa-button pill appearance="outlined" @click=${() => this.#load()}
+                  >${this.t('app.error.retry')}</wa-button
+                >
+              </div>`
+            : html`<div class="loading"><wa-spinner style="font-size:2rem"></wa-spinner></div>`
       }
       ${nothing}
     </wa-dialog>`;

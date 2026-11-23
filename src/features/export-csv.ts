@@ -1,11 +1,19 @@
 import { app } from '../app/services.ts';
 import { saveBlob } from '../data/sharedien/client.ts';
 
+/**
+ * Verhindert Formel-Injektion in Tabellenkalkulationen: Werte, die mit =, +, -, @, Tab oder CR
+ * beginnen, werden mit einem Apostroph versehen und so als Text angezeigt (OWASP «CSV Injection»).
+ */
+export function neutralizeFormula(text: string): string {
+  return /^[=+\-@\t\r]/.test(text) ? `'${text}` : text;
+}
+
 /** Erzeugt eine CSV-Zeile (RFC 4180, Felder mit Trennzeichen/Anführungszeichen/Zeilenumbruch quotiert). */
 export function csvLine(values: string[], delimiter: string): string {
   return values
     .map((value) => {
-      const text = value ?? '';
+      const text = neutralizeFormula(value ?? '');
       return /["\r\n]/.test(text) || text.includes(delimiter) ? `"${text.replace(/"/g, '""')}"` : text;
     })
     .join(delimiter);

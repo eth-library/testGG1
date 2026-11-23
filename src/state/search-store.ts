@@ -189,7 +189,8 @@ export class SearchStore extends Store<SearchStoreState> {
       const url = new URL(loc.state.overlayOf, location.origin);
       effective = {
         ...loc,
-        route: matchRoute(url.pathname.slice(this.router.base.length) || '/'),
+        // overlayOf ist bereits relativ zur Basis (siehe Router.overlayBase).
+        route: matchRoute(url.pathname),
         query: url.searchParams,
       };
     }

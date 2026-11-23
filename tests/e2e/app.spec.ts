@@ -194,6 +194,10 @@ test.describe('Darstellung und Sprache', () => {
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
     await expect(page.locator('ep-search-page .toolbar .count')).toContainText('results');
     await expect(page.locator('ep-filter-panel .toggle').first()).toContainText('Collection');
+    // Sammlungsnamen kommen aus den Daten und müssen nach dem Wechsel ebenfalls englisch sein.
+    await expect(
+      page.locator('ep-category-filter li button', { hasText: 'Aerial photographs' }),
+    ).toBeVisible();
   });
 
   test('Zurück-Taste stellt die Suche wieder her', async ({ page }) => {

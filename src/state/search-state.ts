@@ -94,6 +94,10 @@ export function stateToParams(state: SearchState, defaultSort = 'relevance'): UR
 }
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+/** Feld-Identifier aus der URL; schliesst u. a. __proto__ und constructor aus. */
+const SAFE_KEY = /^[A-Za-z0-9][\w.:-]*$/;
+const FORBIDDEN_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+const isSafeKey = (key: string) => SAFE_KEY.test(key) && !FORBIDDEN_KEYS.has(key);
 
 /** URL-Parameter → Suchzustand (ungültige Werte werden ignoriert). */
 export function paramsToState(params: URLSearchParams, defaultSort = 'relevance'): SearchState {
@@ -106,18 +110,23 @@ export function paramsToState(params: URLSearchParams, defaultSort = 'relevance'
   for (const [key, value] of params) {
     if (key.startsWith(PREFIX.facet) && value) {
       const source = key.slice(PREFIX.facet.length);
-      const values = (state.facets[source] ??= []);
+      if (!isSafeKey(source)) continue;
+      const values = Object.hasOwn(state.facets, source) ? state.facets[source] : (state.facets[source] = []);
       if (!values.includes(value)) values.push(value);
     } else if (key.startsWith(PREFIX.date)) {
+      const source = key.slice(PREFIX.date.length);
+      if (!isSafeKey(source)) continue;
       const [from, to] = value.split('..');
       const range: DateRange = {};
       if (from && ISO_DATE.test(from)) range.from = from;
       if (to && ISO_DATE.test(to)) range.to = to;
-      if (range.from || range.to) state.dates[key.slice(PREFIX.date.length)] = range;
+      if (range.from || range.to) state.dates[source] = range;
     } else if (key.startsWith(PREFIX.text)) {
+      const source = key.slice(PREFIX.text.length);
+      if (!isSafeKey(source)) continue;
       const index = value.indexOf(':');
       if (index > 0 && value.slice(index + 1)) {
-        state.texts[key.slice(PREFIX.text.length)] = {
+        state.texts[source] = {
           op: value.slice(0, index),
           value: value.slice(index + 1),
         };

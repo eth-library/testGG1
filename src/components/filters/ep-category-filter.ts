@@ -144,20 +144,23 @@ export class EpCategoryFilter extends EpElement {
 
   protected override willUpdate(): void {
     const current = this.services.search.state.query.category ?? categories.root();
-    if (current !== this.#loadedFor) {
-      this.#loadedFor = current;
-      void this.#load(current);
+    const key = `${this.services.i18n.locale}|${current}`;
+    if (key !== this.#loadedFor) {
+      this.#loadedFor = key;
+      void this.#load(current, key);
+      // Sprachwechsel: offene Trefferliste der Sammlungssuche neu anfragen.
+      if (this.hits && this.query) this.#onSearch(this.query);
     }
   }
 
-  async #load(id: string) {
+  async #load(id: string, key: string) {
     this.loading = true;
     try {
       const [path, children] = await Promise.all([
         id === categories.root() ? Promise.resolve([]) : categories.path(id),
         categories.children(id),
       ]);
-      if (id !== this.#loadedFor) return;
+      if (key !== this.#loadedFor) return;
       this.path = path.filter((p) => p.id !== categories.root());
       this.nodes = children;
     } catch {
@@ -187,11 +190,14 @@ export class EpCategoryFilter extends EpElement {
       return;
     }
     this.#timer = window.setTimeout(async () => {
+      let hits: CategoryNode[];
       try {
-        this.hits = await this.services.catalog.searchCategories(value, categories.root());
+        hits = await this.services.catalog.searchCategories(value, categories.root());
       } catch {
-        this.hits = [];
+        hits = [];
       }
+      // Nur übernehmen, wenn die Eingabe inzwischen nicht geändert oder geleert wurde.
+      if (this.query === value) this.hits = hits;
     }, 220);
   }
 
