@@ -1,0 +1,176 @@
+import { registerIconLibrary } from '@awesome.me/webawesome/dist/components/icon/library.js';
+import {
+  Archive,
+  ArrowDown,
+  ArrowLeft,
+  ArrowRight,
+  ArrowUpRight,
+  Bookmark,
+  BookmarkCheck,
+  BookmarkPlus,
+  Calendar,
+  Camera,
+  Check,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  CircleHelp,
+  Columns2,
+  Compass,
+  Copy,
+  Download,
+  Ellipsis,
+  ExternalLink,
+  FileSpreadsheet,
+  Folder,
+  FolderOpen,
+  GalleryHorizontalEnd,
+  History,
+  Image,
+  ImageOff,
+  Images,
+  Info,
+  Languages,
+  LayoutGrid,
+  Layers,
+  Library,
+  Link,
+  List,
+  ListFilter,
+  Locate,
+  Lock,
+  Mail,
+  Map,
+  MapPin,
+  Maximize2,
+  Menu,
+  Minimize2,
+  Minus,
+  Monitor,
+  Moon,
+  MoveHorizontal,
+  Package,
+  Pause,
+  Play,
+  Plus,
+  RotateCcw,
+  Rows3,
+  ScanSearch,
+  Search,
+  Share2,
+  SlidersHorizontal,
+  Sparkles,
+  Square,
+  SquareCheck,
+  Sun,
+  Trash2,
+  TriangleAlert,
+  User,
+  X,
+  ZoomIn,
+  ZoomOut,
+  type IconNode,
+} from 'lucide';
+
+/** Verwendete Lucide-Icons (ISC-Lizenz), lokal eingebettet – keine CDN-Anfragen. */
+const ICONS: Record<string, IconNode> = {
+  archive: Archive,
+  'arrow-down': ArrowDown,
+  'arrow-left': ArrowLeft,
+  'arrow-right': ArrowRight,
+  'arrow-up-right': ArrowUpRight,
+  bookmark: Bookmark,
+  'bookmark-check': BookmarkCheck,
+  'bookmark-plus': BookmarkPlus,
+  calendar: Calendar,
+  camera: Camera,
+  check: Check,
+  'chevron-down': ChevronDown,
+  'chevron-left': ChevronLeft,
+  'chevron-right': ChevronRight,
+  'chevron-up': ChevronUp,
+  help: CircleHelp,
+  compare: Columns2,
+  compass: Compass,
+  copy: Copy,
+  download: Download,
+  ellipsis: Ellipsis,
+  'external-link': ExternalLink,
+  csv: FileSpreadsheet,
+  folder: Folder,
+  'folder-open': FolderOpen,
+  justified: GalleryHorizontalEnd,
+  history: History,
+  image: Image,
+  'image-off': ImageOff,
+  images: Images,
+  info: Info,
+  languages: Languages,
+  grid: LayoutGrid,
+  layers: Layers,
+  library: Library,
+  link: Link,
+  list: List,
+  filter: ListFilter,
+  locate: Locate,
+  lock: Lock,
+  mail: Mail,
+  map: Map,
+  'map-pin': MapPin,
+  maximize: Maximize2,
+  menu: Menu,
+  minimize: Minimize2,
+  minus: Minus,
+  monitor: Monitor,
+  moon: Moon,
+  'move-horizontal': MoveHorizontal,
+  package: Package,
+  pause: Pause,
+  play: Play,
+  plus: Plus,
+  reset: RotateCcw,
+  rows: Rows3,
+  'scan-search': ScanSearch,
+  search: Search,
+  share: Share2,
+  sliders: SlidersHorizontal,
+  sparkles: Sparkles,
+  square: Square,
+  'square-check': SquareCheck,
+  sun: Sun,
+  trash: Trash2,
+  warning: TriangleAlert,
+  user: User,
+  x: X,
+  'zoom-in': ZoomIn,
+  'zoom-out': ZoomOut,
+};
+
+const escapeAttr = (value: string | number) => String(value).replace(/"/g, '&quot;');
+
+export function iconSvg(name: string, strokeWidth = 1.6): string | null {
+  const node = ICONS[name];
+  if (!node) return null;
+  const children = node
+    .map(([tag, attrs]) => {
+      const attributes = Object.entries(attrs)
+        .map(([key, value]) => `${key}="${escapeAttr(value as string | number)}"`)
+        .join(' ');
+      return `<${tag} ${attributes}/>`;
+    })
+    .join('');
+  return (
+    `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" ` +
+    `stroke="currentColor" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round">${children}</svg>`
+  );
+}
+
+export function registerIcons(): void {
+  registerIconLibrary('default', {
+    resolver: (name: string) => {
+      const svg = iconSvg(name);
+      return svg ? `data:image/svg+xml,${encodeURIComponent(svg)}` : '';
+    },
+  });
+}

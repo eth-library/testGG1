@@ -1,0 +1,12 @@
+node_modules/
+dist/
+coverage/
+test-results/
+playwright-report/
+.vite/
+*.log
+.DS_Store
+
+# Laufzeit-Konfiguration pro Umgebung (enthält ggf. den Gast-Token) – nicht einchecken
+public/config/config.json
+public/config/config.local.json
