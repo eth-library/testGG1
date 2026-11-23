@@ -28,13 +28,6 @@ export class EpDateFilter extends EpElement {
       .inputs wa-input {
         min-width: 0;
       }
-      wa-slider::part(label) {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-      }
       wa-slider {
         --track-size: 3px;
         --thumb-width: 16px;
@@ -133,6 +126,7 @@ export class EpDateFilter extends EpElement {
     const isDecade = (d: number) => range.from === `${d}-01-01` && range.to === `${d + 9}-12-31`;
     return html`
       <wa-slider
+        class="sr-label"
         range
         min=${min}
         max=${max}

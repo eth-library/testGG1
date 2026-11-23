@@ -30,6 +30,16 @@ export class EpElement extends LitElement {
       white-space: nowrap;
       border: 0;
     }
+    /* Sichtbar ausgeblendete, aber vorgelesene Labels von Web-Awesome-Formularelementen */
+    .sr-label::part(form-control-label),
+    .sr-label::part(label) {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+    }
     a {
       color: inherit;
     }

@@ -528,10 +528,10 @@ export class EpSearchPage extends EpElement {
         ${
           sortOptions.length > 1
             ? html`<wa-select
-                class="sort"
+                class="sort sr-label"
                 size="s"
                 .value=${query.sort}
-                aria-label=${this.t('results.sort')}
+                label=${this.t('results.sort')}
                 @change=${(e: Event) => search.update({ sort: (e.target as HTMLSelectElement).value })}
               >
                 <wa-icon slot="start" name="arrow-down"></wa-icon>
@@ -542,12 +542,12 @@ export class EpSearchPage extends EpElement {
         ${
           view !== 'list'
             ? html`<wa-slider
-                class="size hide-narrow"
+                class="size hide-narrow sr-label"
+                label=${this.t('results.size')}
                 min="140"
                 max="360"
                 step="10"
                 .value=${size}
-                aria-label=${this.t('results.size')}
                 @input=${(e: Event) => search.setSize(Number((e.target as HTMLInputElement).value))}
               ></wa-slider>`
             : nothing

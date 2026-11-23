@@ -247,9 +247,10 @@ export class EpCategoryFilter extends EpElement {
             : nothing
       }
       <wa-input
-        class="search"
+        class="search sr-label"
         size="s"
         type="search"
+        label=${this.t('filters.categorySearch')}
         placeholder=${this.t('filters.categorySearch')}
         .value=${this.query}
         @input=${(e: Event) => this.#onSearch((e.target as HTMLInputElement).value)}

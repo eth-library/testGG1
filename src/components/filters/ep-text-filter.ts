@@ -48,9 +48,10 @@ export class EpTextFilter extends EpElement {
     const op = current?.op ?? this.filter.operation ?? 'Contains';
     return html`
       <wa-select
+        class="sr-label"
         size="s"
         .value=${op}
-        aria-label=${this.t('filters.operation')}
+        label=${this.t('filters.operation')}
         @change=${(e: Event) => this.#apply({ op: (e.target as HTMLSelectElement).value })}
       >
         ${OPERATIONS.map(
@@ -58,8 +59,10 @@ export class EpTextFilter extends EpElement {
         )}
       </wa-select>
       <wa-input
+        class="sr-label"
         size="s"
         type="search"
+        label=${this.t('filters.textPlaceholder')}
         placeholder=${this.t('filters.textPlaceholder')}
         .value=${current?.value ?? ''}
         with-clear

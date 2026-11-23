@@ -195,9 +195,10 @@ export class EpFacetFilter extends EpElement {
       ${
         total > 10 && this.expanded
           ? html`<wa-input
-              class="search"
+              class="search sr-label"
               size="s"
               type="search"
+              label=${this.t('filters.search')}
               placeholder=${this.t('filters.search')}
               .value=${this.query}
               @input=${(e: Event) => (this.query = (e.target as HTMLInputElement).value)}

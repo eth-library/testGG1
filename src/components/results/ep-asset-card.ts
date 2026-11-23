@@ -329,7 +329,6 @@ export class EpAssetCard extends EpElement {
         class="card"
         href=${this.href(`/bild/${encodeURIComponent(asset.id)}`)}
         data-overlay="true"
-        aria-label=${title}
         @click=${this.#onClick}
         role=${this.selectable ? 'checkbox' : nothing}
         aria-checked=${this.selectable ? String(this.selected) : nothing}
@@ -340,7 +339,7 @@ export class EpAssetCard extends EpElement {
               ? html`<div class="failed"><wa-icon name="image-off"></wa-icon></div>`
               : html`<img
                   src=${asset.thumbnail}
-                  alt=""
+                  alt=${title}
                   loading="lazy"
                   decoding="async"
                   draggable="false"

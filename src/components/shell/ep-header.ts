@@ -226,7 +226,7 @@ export class EpHeader extends EpElement {
     return html`
       <header class=${this.scrolled ? 'scrolled' : ''}>
         <div class="inner">
-          <a class="brand" href=${this.href('/')} aria-label=${this.pick(config.branding.name)}>
+          <a class="brand" href=${this.href('/')}>
             <span class="mark" aria-hidden="true">
               ${
                 config.branding.logo
