@@ -18,6 +18,18 @@ npm run dev          # http://127.0.0.1:5173 – Demo-Modus mit Beispieldaten
 Ohne `public/config/config.json` startet die App mit `config.example.json` im Demo-Modus: Die
 Sharedien-Endpunkte werden im Browser nachgebildet, die Bilder sind generierte Platzhalter.
 
+## Ansichten (Demo-Modus)
+
+| Startseite                                           | Suche (dunkel)                                              |
+| ---------------------------------------------------- | ----------------------------------------------------------- |
+| ![Startseite](docs/screenshots/startseite-hell.webp) | ![Suche im Dunkelmodus](docs/screenshots/suche-dunkel.webp) |
+| **Detailansicht**                                    | **Karte**                                                   |
+| ![Detailansicht](docs/screenshots/detail-hell.webp)  | ![Karte](docs/screenshots/karte-hell.webp)                  |
+
+Weitere: [Startseite dunkel](docs/screenshots/startseite-dunkel.webp),
+[Suche hell](docs/screenshots/suche-hell.webp), [Sammlungen](docs/screenshots/sammlungen-dunkel.webp),
+[Mobil](docs/screenshots/mobil-suche.webp).
+
 ## Funktionen
 
 - **Suche**: Volltext mit Vorschlägen und Verlauf, UND/ODER, `"Phrase"`, optional KI-Suche
