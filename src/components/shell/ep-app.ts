@@ -23,6 +23,10 @@ export class EpApp extends EpElement {
         display: flex;
         flex-direction: column;
         min-height: 100dvh;
+        --ep-offset: 0px;
+      }
+      :host([demo]) {
+        --ep-offset: calc(1.8625rem + 1px);
       }
       main {
         flex: 1;
@@ -83,6 +87,7 @@ export class EpApp extends EpElement {
 
   override connectedCallback(): void {
     super.connectedCallback();
+    this.toggleAttribute('demo', this.services.config.api.mock);
     this.services.analytics.pageView();
   }
 

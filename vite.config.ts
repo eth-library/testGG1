@@ -3,6 +3,7 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   appType: 'spa',
+  worker: { format: 'es' },
   resolve: {
     dedupe: ['lit', 'lit-html', 'lit-element', '@lit/reactive-element'],
   },

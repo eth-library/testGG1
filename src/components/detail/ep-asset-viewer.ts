@@ -70,7 +70,7 @@ export class EpAssetViewer extends EpElement {
         outline: none;
       }
       :host([mode='page']) .viewer {
-        height: calc(100dvh - var(--ep-header-h));
+        height: calc(100dvh - var(--ep-header-h) - var(--ep-offset, 0px));
         min-height: 32rem;
       }
       .viewer.no-info {
