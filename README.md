@@ -101,6 +101,24 @@ Referenz: [docs/CONFIG.md](docs/CONFIG.md). Für den Betrieb:
   `/usr/share/nginx/html/config/config.json` mounten.
 - **Statisches Hosting**: Inhalt von `dist/` ausliefern; alle unbekannten Pfade müssen auf
   `index.html` zeigen (saubere URLs wie `/suche`, `/bild/<id>`).
+- **Unterpfad**: Für einen Betrieb unter z. B. `/bildarchiv/` mit `npm run build -- --base=/bildarchiv/`
+  bauen; Router und Config-Pfad übernehmen den Unterpfad automatisch.
+
+### Demo auf GitHub Pages
+
+Der Workflow [.github/workflows/pages.yml](.github/workflows/pages.yml) baut die App im Demo-Modus
+(Platzhalterbilder, nachgebildete API, keine echten Daten) unter `/<repo>/` und veröffentlicht sie unter
+`https://eth-library.github.io/testGG1/`. Die Demo ist mit `noindex` markiert; saubere URLs funktionieren
+über eine Kopie von `index.html` als `404.html` (Direktaufrufe antworten deshalb mit Status 404).
+
+Der Build läuft bei jedem Push; veröffentlicht wird erst nach diesen einmaligen Einstellungen durch einen
+Repo-Admin:
+
+1. **Settings → Pages → Build and deployment → Source:** «GitHub Actions».
+2. **Settings → Environments → `github-pages` → Deployment branches:** den Entwicklungsbranch zulassen
+   (standardmässig darf nur `main` veröffentlichen).
+3. **Settings → Secrets and variables → Actions → Variables:** `DEMO_PAGES` = `true`, danach den Workflow
+   «Demo (GitHub Pages)» erneut ausführen.
 
 ## Lizenzen der Abhängigkeiten
 

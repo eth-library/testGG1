@@ -1,0 +1,62 @@
+# Demo des Bildkatalogs auf GitHub Pages (Demo-Modus mit Platzhalterdaten, keine echte API).
+#
+# Der Build läuft bei jedem Push und prüft damit den Build unter einem Unterpfad.
+# Veröffentlicht wird erst, wenn ein Repo-Admin GitHub Pages aktiviert und die
+# Repository-Variable DEMO_PAGES=true gesetzt hat (siehe README, «Demo auf GitHub Pages»).
+name: Demo (GitHub Pages)
+
+on:
+  push:
+    branches: [main, 'claude/image-katalog-redesign-9o9x72']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      BASE_PATH: /${{ github.event.repository.name }}/
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Build unter dem Unterpfad
+        run: npm run build -- --base="$BASE_PATH"
+      - name: Demo nicht indexieren, Rückfall für saubere URLs
+        run: |
+          sed -i 's|<head>|<head>\n    <meta name="robots" content="noindex" />|' dist/index.html
+          cp dist/index.html dist/404.html
+      - name: Pfade prüfen
+        run: |
+          grep -q "src=\"${BASE_PATH}assets/" dist/index.html
+          grep -q 'name="robots" content="noindex"' dist/404.html
+          test -f dist/config/config.example.json
+          test ! -e dist/config/config.json
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    if: vars.DEMO_PAGES == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
