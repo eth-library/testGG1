@@ -145,11 +145,15 @@ export class EpResultsTable extends EpElement {
     const defs = catalog.fieldDefinitions();
     const columns = config.results.tableColumns;
     const sort = search.state.query.sort;
-    const header = (field: string, label: string) => {
+    const sortState = (field: string) => {
       const { asc, desc } = this.#sortFor(field);
-      if (!asc && !desc) return html`${label}`;
-      const state = sort === asc ? 'ascending' : sort === desc ? 'descending' : 'none';
-      return html`<button type="button" @click=${() => this.#toggleSort(field)} aria-sort=${state}>
+      if (!asc && !desc) return nothing;
+      return sort === asc ? 'ascending' : sort === desc ? 'descending' : 'none';
+    };
+    const header = (field: string, label: string) => {
+      const state = sortState(field);
+      if (state === nothing) return html`${label}`;
+      return html`<button type="button" @click=${() => this.#toggleSort(field)}>
         ${label}
         ${
           state !== 'none'
@@ -162,10 +166,12 @@ export class EpResultsTable extends EpElement {
       <thead>
         <tr>
           <th class="thumb"><span class="visually-hidden">${this.t('results.preview')}</span></th>
-          <th>${header(config.fields.title ?? 'title', this.t('results.title'))}</th>
+          <th aria-sort=${sortState(config.fields.title ?? 'title')}>
+            ${header(config.fields.title ?? 'title', this.t('results.title'))}
+          </th>
           ${columns.map(
             (col, i) =>
-              html`<th class=${i > 1 ? 'opt' : ''}>
+              html`<th class=${i > 1 ? 'opt' : ''} aria-sort=${sortState(col.field)}>
                 ${header(col.field, this.pick(col.label) || defs.get(col.field)?.label || col.field)}
               </th>`,
           )}

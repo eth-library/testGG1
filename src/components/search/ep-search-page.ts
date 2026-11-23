@@ -325,11 +325,16 @@ export class EpSearchPage extends EpElement {
         }
       }
       @media (max-width: 640px) {
+        .toolbar .wrap {
+          flex-wrap: wrap;
+          row-gap: 0.4rem;
+          padding-block: 0.5rem;
+        }
         .count .for {
           display: none;
         }
         wa-select.sort {
-          width: 9rem;
+          width: 10.5rem;
         }
       }
     `,

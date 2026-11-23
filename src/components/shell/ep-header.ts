@@ -168,17 +168,28 @@ export class EpHeader extends EpElement {
         .owner {
           display: none;
         }
-        .search:not(.concealed) {
-          position: absolute;
-          left: 0;
-          right: 0;
-          top: var(--ep-header-h);
+        /* Zweizeilige Kopfzeile: Suche in eigener Zeile (Höhe siehe --ep-header-h in global.css). */
+        .inner {
+          flex-wrap: wrap;
+          height: auto;
+          min-height: var(--ep-header-h);
+          row-gap: 0.55rem;
+          padding-block: 0.65rem;
+          align-content: center;
+        }
+        .search {
+          order: 10;
+          flex-basis: 100%;
           max-width: none;
-          padding: 0 var(--ep-gutter) 0.75rem;
-          background: var(--ep-glass);
-          backdrop-filter: blur(18px) saturate(1.5);
-          -webkit-backdrop-filter: blur(18px) saturate(1.5);
-          border-bottom: 1px solid var(--ep-border);
+        }
+        .search.concealed {
+          display: none;
+        }
+        .spacer {
+          display: block;
+        }
+        :host([home]) .inner {
+          min-height: 4.25rem;
         }
         .tools ep-lang-switch {
           display: none;
@@ -212,6 +223,10 @@ export class EpHeader extends EpElement {
     window.removeEventListener('scroll', this.#onScroll);
   }
 
+  #narrow(): boolean {
+    return window.matchMedia('(max-width: 720px)').matches;
+  }
+
   #current(name: string) {
     const route = this.route?.name;
     if (name === 'collections') return route === 'collections' || route === 'collection' ? 'page' : nothing;
@@ -221,7 +236,9 @@ export class EpHeader extends EpElement {
   override render() {
     const { config } = this.services;
     const isHome = this.route?.name === 'home';
-    const showSearch = !isHome || this.pastHero;
+    this.toggleAttribute('home', isHome);
+    // Auf dem Handy bleibt die Startseite bei der grossen Hero-Suche.
+    const showSearch = !isHome || (this.pastHero && !this.#narrow());
     const mapEnabled = config.map.enabled && !!config.fields.coordinates;
     return html`
       <header class=${this.scrolled ? 'scrolled' : ''}>
@@ -245,7 +262,7 @@ export class EpHeader extends EpElement {
           <div class="search ${showSearch ? '' : 'concealed'}" ?inert=${!showSearch}>
             <ep-search-bar compact></ep-search-bar>
           </div>
-          ${showSearch ? nothing : html`<span class="spacer"></span>`}
+          <span class="spacer" ?hidden=${showSearch && !this.#narrow()}></span>
           <nav aria-label=${this.t('nav.main')}>
             <a href=${this.href('/suche')} aria-current=${this.#current('search')}>${this.t('nav.search')}</a>
             <a href=${this.href('/sammlungen')} aria-current=${this.#current('collections')}

@@ -34,6 +34,12 @@
   --wa-focus-ring-offset: 2px;
 }
 
+@media (max-width: 720px) {
+  :root {
+    --ep-header-h: 7.15rem;
+  }
+}
+
 html {
   background: var(--ep-bg);
   color: var(--ep-text);

@@ -248,7 +248,7 @@ export class EpHomePage extends EpElement {
       }
       @media (max-width: 1080px) {
         .hero {
-          grid-template-columns: 1fr;
+          grid-template-columns: minmax(0, 1fr);
           min-height: 0;
         }
         .collage {

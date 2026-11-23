@@ -245,6 +245,10 @@ export class EpAssetCard extends EpElement {
         position: absolute;
         left: 0.55rem;
         bottom: 0.55rem;
+        max-width: calc(100% - 1.1rem);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         z-index: 1;
         display: inline-flex;
         align-items: center;
